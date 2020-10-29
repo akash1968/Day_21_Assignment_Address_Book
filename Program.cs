@@ -5,13 +5,14 @@
 // <creator Name="Akash Kumar Singh"/>
 // --------------------------------------------------------------------------------------------------------------------
 using CsvHelper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Transactions;
+using System.Xml.Serialization;
 
 namespace Day_21_Assignment_Address_Book
 {
@@ -19,7 +20,7 @@ namespace Day_21_Assignment_Address_Book
     {
         public static void Main(string[] args)
         {
-            string path = @"C:\Users\Lenovo\source\repos\Day_21_Assignment_Address_Book\Day_21_Assignment_Address_Book\export.csv";
+            string path = @"C:\Users\Lenovo\source\repos\Day_21_Assignment_Address_Book\Day_21_Assignment_Address_Book\export.json";
             int choice = 0;
             //Creating a method of class AddressBook
             AddressBook addbook = new AddressBook();
@@ -246,18 +247,21 @@ namespace Day_21_Assignment_Address_Book
                 {
                     addbook.AddressByState();
                 }
-               // Ability to Read / Write the address book with person's contact as CSV file
+               // UC_15- Ability to Read / Write the address book with person's contact as JSON file
                 else if (choice == 9)
                 {
-                    if (File.Exists(path))
-                        
+                    if (File.Exists(path))                                             
                     {
-                        List<Contact> li = addbook.ViewAddressBook(1);
-                        // Writing into CSV file
-                        using (var writer = new StreamWriter(path))
-                        using (var csvwriter = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                        // Creating Json Serializer object
+                        Newtonsoft.Json.JsonSerializer ser = new Newtonsoft.Json.JsonSerializer();
+                       // Initializing JSON Stream Reader and Writer
+                        using (StreamWriter sw = new StreamWriter(path))
+                        using (JsonWriter writer = new JsonTextWriter(sw))
                         {
-                            csvwriter.WriteRecords(li);
+                            // creating object of View Address book and storing into list
+                            List<Contact> li = addbook.ViewAddressBook(1);
+                            // calling the JSON Serialize method
+                            ser.Serialize(writer, li);
                         }
                     }
                     // Reading all text from the file
