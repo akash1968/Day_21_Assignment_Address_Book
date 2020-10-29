@@ -5,12 +5,12 @@
 // <creator Name="Akash Kumar Singh"/>
 // --------------------------------------------------------------------------------------------------------------------
 using CsvHelper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Day_21_Assignment_Address_Book
@@ -235,14 +235,12 @@ namespace Day_21_Assignment_Address_Book
         internal void ReadAllText()
         {
             // Initialization
-            string importpath = @"C:\Users\Lenovo\source\repos\Day_21_Assignment_Address_Book\Day_21_Assignment_Address_Book\import.csv";
-            // Reading CSV File
-            using (var reader = new StreamReader(importpath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            string path = @"C:\Users\Lenovo\source\repos\Day_21_Assignment_Address_Book\Day_21_Assignment_Address_Book\export.json";
+           // Reading all text using JSON Converter and stoting into list
+            List<Contact> list = JsonConvert.DeserializeObject<List<Contact>>(File.ReadAllText(path)).ToList();
             {
-                var lists = csv.GetRecords<Contact>().ToList();
-                Console.WriteLine("Read data from AddressBook.cs");
-                foreach (Contact cc in lists)
+                // Iterating each contact data using foreach loop
+                foreach (Contact cc in list)
                 {
                     Console.Write("Name : " + cc.name);
                     Console.Write("\nAddress : " + cc.address);
